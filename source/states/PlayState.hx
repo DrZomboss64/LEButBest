@@ -1,6 +1,5 @@
 package states;
 
-import flixel.group.FlxSpriteGroup;
 #if sys
 import sys.FileSystem;
 #end
@@ -9,6 +8,9 @@ import utilities.Discord.DiscordClient;
 #end
 #if polymod
 import polymod.backends.PolymodAssets;
+#end
+#if VIDEOS_ALLOWED
+import hxcodec.VideoHandler;
 #end
 #if VIDEOS_ALLOWED
 import hxcodec.VideoHandler;
@@ -574,9 +576,6 @@ class PlayState extends MusicBeatState
 
 	// unused for now ;)
 	public var scripts:Array<HScript> = [];
-	// public var scripts:Array<HScript> = [];
-
-	public var ratingsGroup:FlxSpriteGroup = new FlxSpriteGroup();
 
 	override public function create()
 	{
@@ -1589,20 +1588,6 @@ class PlayState extends MusicBeatState
 				angle: member.angle,
 			});
 
-			if (enemyStrums.members.contains(member)) {
-				setLuaVar("enemyStrum" + i % SONG.keyCount, {
-					x: member.x,
-					y: member.y,
-					angle: member.angle,
-				});
-			} else {
-				setLuaVar("playerStrum" + i % SONG.playerKeyCount, {
-					x: member.x,
-					y: member.y,
-					angle: member.angle,
-				});
-			}
-
 		}
 
 		executeALuaState("start", [SONG.song.toLowerCase()], BOTH, [stage.stage]);
@@ -1767,11 +1752,11 @@ class PlayState extends MusicBeatState
 				if (songNotes[1] >= (!gottaHitNote ? SONG.keyCount : SONG.playerKeyCount))
 					gottaHitNote = !section.mustHitSection;
 
-				switch (characterPlayingAs) {
-					case 1:
-						gottaHitNote = !gottaHitNote;
-					case -1:
-						gottaHitNote = true;
+				if (characterPlayingAs == 1)
+					gottaHitNote = !gottaHitNote;
+
+				if (characterPlayingAs == -1)
+					gottaHitNote = true;
 
 				var daNoteData:Int = Std.int(songNotes[1] % (!gottaHitNote ? SONG.keyCount : SONG.playerKeyCount));
 
@@ -3235,10 +3220,19 @@ class PlayState extends MusicBeatState
 			accuracyText.borderSize = 1;
 			accuracyText.font = Paths.font("vcr.ttf");
 
-			ratingsGroup.add(accuracyText);
+			add(accuracyText);
 		}
 
-		ratingsGroup.add(rating);
+		rating.cameras = [camHUD];
+
+		var comboSpr:FlxSprite = new FlxSprite() /*.loadGraphic(Paths.image("ui skins/" + SONG.ui_Skin + "/ratings/combo", 'shared'))*/;
+		comboSpr.screenCenter();
+		comboSpr.acceleration.y = 600;
+		comboSpr.velocity.y -= 150;
+
+		comboSpr.velocity.x += FlxG.random.int(1, 10);
+		comboSpr.cameras = [camHUD];
+		add(rating);
 
 		rating.setGraphicSize(Std.int(rating.width * Std.parseFloat(ui_settings[0]) * Std.parseFloat(ui_settings[4])));
 		comboSpr.setGraphicSize(Std.int(comboSpr.width * Std.parseFloat(ui_settings[0]) * Std.parseFloat(ui_settings[4])));
@@ -3246,6 +3240,7 @@ class PlayState extends MusicBeatState
 		rating.antialiasing = ui_settings[3] == "true";
 		comboSpr.antialiasing = ui_settings[3] == "true";
 
+		comboSpr.updateHitbox();
 		rating.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
