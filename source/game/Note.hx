@@ -41,7 +41,7 @@ class Note extends FlxSprite
 	public var character:Int = 0;
 
 	public var characters:Array<Int> = [];
-	
+
 	public var arrow_Type:String;
 
 	public var shouldHit:Bool = true;
@@ -54,11 +54,12 @@ class Note extends FlxSprite
 
 	public var inEditor:Bool = false;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?character:Int = 0, ?arrowType:String = "default", ?song:SwagSong, ?characters:Array<Int>, ?mustPress:Bool = false, ?inEditor:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?character:Int = 0, ?arrowType:String = "default",
+			?song:SwagSong, ?characters:Array<Int>, ?mustPress:Bool = false, ?inEditor:Bool = false)
 	{
 		super();
 
-		if(prevNote == null)
+		if (prevNote == null)
 			prevNote = this;
 
 		this.prevNote = prevNote;
@@ -71,7 +72,7 @@ class Note extends FlxSprite
 
 		isSustainNote = sustainNote;
 
-		if(song == null)
+		if (song == null)
 			song = PlayState.SONG;
 
 		var localKeyCount = mustPress ? song.playerKeyCount : song.keyCount;
@@ -92,25 +93,27 @@ class Note extends FlxSprite
 		animation.addByPrefix("holdend", NoteVariables.Other_Note_Anim_Stuff[localKeyCount - 1][noteData] + " hold end0", 24);
 
 		var lmaoStuff = Std.parseFloat(PlayState.instance.ui_settings[0]) * (Std.parseFloat(PlayState.instance.ui_settings[2])
-		- (Std.parseFloat(PlayState.instance.mania_size[localKeyCount - 1])));
+			- (Std.parseFloat(PlayState.instance.mania_size[localKeyCount - 1])));
 
-		if(isSustainNote)
-			setGraphicSize(Std.int(width * lmaoStuff), 
-		        Std.int(height * Std.parseFloat(PlayState.instance.ui_settings[0]) * (Std.parseFloat(PlayState.instance.ui_settings[2])
-				     - (Std.parseFloat(PlayState.instance.mania_size[3])))));
+		if (isSustainNote)
+			scale.set(lmaoStuff,
+				Std.parseFloat(PlayState.instance.ui_settings[0]) *
+				(Std.parseFloat(PlayState.instance.ui_settings[2]) -
+				(Std.parseFloat(PlayState.instance.mania_size[3])))
+			);
 		else
-			setGraphicSize(Std.int(width * lmaoStuff));
+			scale.set(lmaoStuff, lmaoStuff);
 
 		updateHitbox();
-		
+
 		antialiasing = PlayState.instance.ui_settings[3] == "true";
 
 		x += swagWidth * noteData;
 		animation.play("default");
 
-		if(!PlayState.instance.arrow_Configs.exists(arrow_Type))
+		if (!PlayState.instance.arrow_Configs.exists(arrow_Type))
 		{
-			if(PlayState.instance.types.contains(arrow_Type))
+			if (PlayState.instance.types.contains(arrow_Type))
 				PlayState.instance.arrow_Configs.set(arrow_Type, CoolUtil.coolTextFile(Paths.txt("ui skins/" + song.ui_Skin + "/" + arrow_Type)));
 			else
 				PlayState.instance.arrow_Configs.set(arrow_Type, CoolUtil.coolTextFile(Paths.txt("ui skins/default/" + arrow_Type)));
@@ -123,34 +126,34 @@ class Note extends FlxSprite
 		shouldHit = PlayState.instance.type_Configs.get(arrow_Type)[0] == "true";
 		hitDamage = Std.parseFloat(PlayState.instance.type_Configs.get(arrow_Type)[1]);
 		missDamage = Std.parseFloat(PlayState.instance.type_Configs.get(arrow_Type)[2]);
- 
-		if(PlayState.instance.type_Configs.get(arrow_Type)[4] != null)
+
+		if (PlayState.instance.type_Configs.get(arrow_Type)[4] != null)
 			playMissOnMiss = PlayState.instance.type_Configs.get(arrow_Type)[4] == "true";
 		else
 		{
-			if(shouldHit)
+			if (shouldHit)
 				playMissOnMiss = true;
 			else
 				playMissOnMiss = false;
 		}
-		
-		if(PlayState.instance.type_Configs.get(arrow_Type)[3] != null)
+
+		if (PlayState.instance.type_Configs.get(arrow_Type)[3] != null)
 			heldMissDamage = Std.parseFloat(PlayState.instance.type_Configs.get(arrow_Type)[3]);
 
-		if (utilities.Options.getData("downscroll") && sustainNote) 
+		if (utilities.Options.getData("downscroll") && sustainNote)
 			flipY = true;
 
 		if (isSustainNote && prevNote != null)
 		{
 			alpha = 0.6;
 
-			if(song.ui_Skin != 'pixel')
+			if (song.ui_Skin != 'pixel')
 				x += width / 2;
 
 			animation.play("holdend");
 			updateHitbox();
 
-			if(song.ui_Skin != 'pixel')
+			if (song.ui_Skin != 'pixel')
 				x -= width / 2;
 
 			if (song.ui_Skin == 'pixel')
@@ -162,7 +165,7 @@ class Note extends FlxSprite
 
 				var speed = song.speed;
 
-				if(utilities.Options.getData("useCustomScrollSpeed"))
+				if (utilities.Options.getData("useCustomScrollSpeed"))
 					speed = utilities.Options.getData("customScrollSpeed") / PlayState.songMultiplier;
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * speed;
@@ -175,19 +178,19 @@ class Note extends FlxSprite
 
 		var affectedbycolor:Bool = false;
 
-		if(PlayState.instance.arrow_Configs.get(arrow_Type)[5] != null)
+		if (PlayState.instance.arrow_Configs.get(arrow_Type)[5] != null)
 		{
-			if(PlayState.instance.arrow_Configs.get(arrow_Type)[5] == "true")
+			if (PlayState.instance.arrow_Configs.get(arrow_Type)[5] == "true")
 				affectedbycolor = true;
 		}
 
-		if(affectedbycolor)
+		if (affectedbycolor)
 		{
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
-	
+
 			var noteColor = NoteColors.getNoteColor(NoteVariables.Other_Note_Anim_Stuff[localKeyCount - 1][noteData]);
-	
+
 			colorSwap.hue = noteColor[0] / 360;
 			colorSwap.saturation = noteColor[1] / 100;
 			colorSwap.brightness = noteColor[2] / 100;
@@ -202,9 +205,9 @@ class Note extends FlxSprite
 
 		calculateCanBeHit();
 
-		if(!inEditor)
+		if (!inEditor)
 		{
-			if(tooLate)
+			if (tooLate)
 			{
 				if (alpha > 0.3)
 					alpha = 0.3;
@@ -214,59 +217,37 @@ class Note extends FlxSprite
 
 	public function calculateCanBeHit()
 	{
-		if(this != null)
+		if (this != null)
 		{
-			if(mustPress)
+			if (mustPress)
 			{
-				if (isSustainNote)
+				/**
+					TODO: make this shit use something from the arrow config .txt file
+				**/
+				if (shouldHit)
 				{
-					if(shouldHit)
-					{
-						if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * 1.5)
-							&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
-							canBeHit = true;
-						else
-							canBeHit = false;
-					}
+					if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
+						&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset)
+						canBeHit = true;
 					else
-					{
-						if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset * 0.3
-							&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset * 0.2)
-							canBeHit = true;
-						else
-							canBeHit = false;
-					}
+						canBeHit = false;
 				}
 				else
 				{
-					/*
-					TODO: make this shit use something from the arrow config .txt file
-					*/ 
-					if(shouldHit)
-					{
-						if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-							&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset)
-							canBeHit = true;
-						else
-							canBeHit = false;
-					}
+					if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset * 0.3
+						&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset * 0.2)
+						canBeHit = true;
 					else
-					{
-						if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset * 0.3
-							&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset * 0.2)
-							canBeHit = true;
-						else
-							canBeHit = false;
-					}
+						canBeHit = false;
 				}
-	
+
 				if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 					tooLate = true;
 			}
 			else
 			{
 				canBeHit = false;
-	
+
 				if (strumTime <= Conductor.songPosition)
 					wasGoodHit = true;
 			}
@@ -274,9 +255,10 @@ class Note extends FlxSprite
 	}
 }
 
-typedef NoteType = {
+typedef NoteType =
+{
 	var shouldHit:Bool;
 
 	var hitDamage:Float;
 	var missDamage:Float;
-} 
+}

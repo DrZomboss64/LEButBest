@@ -1,19 +1,10 @@
 package;
 
-import flixel.graphics.FlxGraphic;
-import openfl.system.System;
-import openfl.media.Sound;
-import openfl.display.BitmapData;
-import openfl.display3D.textures.Texture;
 import lime.utils.Assets;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
-#if not web
-import sys.FileSystem;
-import sys.io.File;
-#end
 
 class Paths
 {
@@ -190,7 +181,7 @@ class Paths
 	inline static public function json(key:String, ?library:String):String
 		return getPath('data/$key.json', TEXT, library);
 
-	static public function video(key:String, ?ext:String = VIDEO_EXT)
+	static public function video(key:String, ?ext:String = VIDEO_EXT):String
 		return 'assets/videos/$key.$ext';
 
 	static public function sound(key:String, ?library:String):String

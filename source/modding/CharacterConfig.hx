@@ -14,21 +14,16 @@ typedef CharacterConfig =
 
 	var offsetsFlipWhenPlayer:Null<Bool>;
 	var offsetsFlipWhenEnemy:Null<Bool>;
-
 	var swapDirectionSingWhenPlayer:Null<Bool>;
-
 	var trail:Null<Bool>;
 	var trailLength:Null<Int>;
 	var trailDelay:Null<Int>;
 	var trailStalpha:Null<Float>;
 	var trailDiff:Null<Float>;
-
 	var deathCharacter:Null<String>;
 	var deathCharacterName:Null<String>;
-
 	// multiple characters stuff
 	var characters:Array<CharacterData>;
-
 	var healthIcon:String;
 	var antialiased:Null<Bool>;
 	var antialiasing:Null<Bool>;

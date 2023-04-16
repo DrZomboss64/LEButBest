@@ -105,7 +105,9 @@ class LoadingState extends MusicBeatState
 	function checkLibrary(library:String)
 	{
 		trace(Assets.hasLibrary(library));
-		if (Assets.getLibrary(library) == null)
+		trace(library);
+
+		if (!Assets.hasLibrary(library))
 		{
 			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
@@ -174,6 +176,7 @@ class LoadingState extends MusicBeatState
 		if (!loaded)
 			return new LoadingState(target, stopMusic);
 		#end
+
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		

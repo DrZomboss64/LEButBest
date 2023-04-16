@@ -18,11 +18,6 @@ class ResultsScreenSubstate extends MusicBeatSubstate
     public function new()
     {
         super();
-        
-        if (utilities.Options.getData("skipResultsScreen")) {
-            PlayState.instance.finishSongStuffs();
-            return;
-        }
 
         var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -70,11 +65,9 @@ class ResultsScreenSubstate extends MusicBeatSubstate
             FlxG.state.closeSubState();
         }
 
-        @:privateAccess
-        if(FlxG.keys.justPressed.SHIFT && !PlayState.playingReplay && !PlayState.SONG.validScore)
+        if(FlxG.keys.justPressed.SHIFT && !PlayState.playingReplay && PlayState.SONG.validScore)
             PlayState.instance.saveReplay();
 
-        @:privateAccess
         if(FlxG.keys.justPressed.ESCAPE && !PlayState.playingReplay && PlayState.SONG.validScore)
         {
             PlayState.instance.saveReplay();

@@ -31,13 +31,13 @@ class MusicBeatState extends FlxUIState
 
 	override public function new()
 	{
-		#if polymod
+		/*#if polymod
 		polymod.Polymod.clearCache();
 		#end
 			
 		#if sys
 		openfl.system.System.gc();	
-		#end
+		#end*/
 
 		super();
 	}
@@ -130,11 +130,11 @@ class MusicBeatState extends FlxUIState
 	public function beatHit():Void { /* do literally nothing dumbass */ }
 
 	public function fancyOpenURL(schmancy:String)
-	{
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
-		#else
-		FlxG.openURL(schmancy);
-		#end
-	}
+		{
+			#if linux
+			Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
+			#else
+			FlxG.openURL(schmancy);
+			#end
+		}
 }

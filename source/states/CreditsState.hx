@@ -57,7 +57,7 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Leather Engine But Better'],
-			['Expunged DX', 'ExpungedDX', 'Main Programmer of \nLeather Engine But Better Ui', 'https://twitter.com/Shadow_Mario_', 'FFD800'],
+			['Expunged DX', 'ExpungedDX', 'Main Programmer of \nLeather Engine But Better Ui', 'https://www.youtube.com/channel/UC24wMC3uqFYDlPttTJ28Rpg', 'FFD800'],
 			[''],
 			['Leather Engine Team'],
 			['Leather128', 'leather128', 'Creator & Artist of Leather Engine', 'https://gamebanana.com/members/1799813', 'F9F400'],

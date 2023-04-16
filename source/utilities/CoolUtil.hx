@@ -13,14 +13,15 @@ using StringTools;
 
 class CoolUtil
 {
-	public static function boundTo(value:Float, min:Float, max:Float):Float {
+	public static function boundTo(value:Float, min:Float, max:Float):Float
+	{
 		var newValue:Float = value;
 
-		if(newValue < min)
+		if (newValue < min)
 			newValue = min;
-		else if(newValue > max)
+		else if (newValue > max)
 			newValue = max;
-		
+
 		return newValue;
 	}
 
@@ -42,7 +43,7 @@ class CoolUtil
 
 		var daList:Array<Array<String>> = [];
 
-		for(line in daListOg)
+		for (line in daListOg)
 		{
 			daList.push(line.split(delimeter));
 		}
@@ -53,10 +54,10 @@ class CoolUtil
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];
+
 		for (i in min...max)
-		{
 			dumbArray.push(i);
-		}
+
 		return dumbArray;
 	}
 
@@ -75,12 +76,13 @@ class CoolUtil
 
 		var textArray:Array<String> = text.split(" ");
 
-		for(text in textArray) {
+		for (text in textArray)
+		{
 			var textStuffs = text.split("");
 
-			for(i in 0...textStuffs.length)
+			for (i in 0...textStuffs.length)
 			{
-				if(i != 0)
+				if (i != 0)
 					returnText += textStuffs[i].toLowerCase();
 				else
 					returnText += textStuffs[i].toUpperCase();
@@ -97,17 +99,17 @@ class CoolUtil
 	{
 		var countByColor:Map<Int, Int> = [];
 
-		for(col in 0...sprite.frameWidth)
+		for (col in 0...sprite.frameWidth)
 		{
-			for(row in 0...sprite.frameHeight)
+			for (row in 0...sprite.frameHeight)
 			{
 				var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 
-				if(colorOfThisPixel != 0)
+				if (colorOfThisPixel != 0)
 				{
-					if(countByColor.exists(colorOfThisPixel))
-						countByColor[colorOfThisPixel] =  countByColor[colorOfThisPixel] + 1;
-					else if(countByColor[colorOfThisPixel] != 13520687 - (2*13520687))
+					if (countByColor.exists(colorOfThisPixel))
+						countByColor[colorOfThisPixel] = countByColor[colorOfThisPixel] + 1;
+					else if (countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687))
 						countByColor[colorOfThisPixel] = 1;
 				}
 			}
@@ -118,9 +120,9 @@ class CoolUtil
 
 		countByColor[flixel.util.FlxColor.BLACK] = 0;
 
-		for(key in countByColor.keys())
+		for (key in countByColor.keys())
 		{
-			if(countByColor[key] >= maxCount)
+			if (countByColor[key] >= maxCount)
 			{
 				maxCount = countByColor[key];
 				maxKey = key;
@@ -161,7 +163,7 @@ class CoolUtil
 		text.borderColor = FlxColor.BLACK;
 		text.scrollFactor.set();
 		text.cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-		
+
 		FlxG.state.add(text);
 
 		FlxTween.tween(text, {alpha: 0, y: 8}, 5, {
@@ -177,6 +179,7 @@ class CoolUtil
 	/**
 		Simple map that contains useful ascii color strings
 		that can be used when printing to console for nice colors.
+
 		@author martinwells (https://gist.github.com/martinwells/5980517)
 	**/
 	public static var ascii_colors:Map<String, String> = [
@@ -194,8 +197,10 @@ class CoolUtil
 
 	/**
 		Used to replace haxe.Log.trace
+
 		@param value Value to trace.
 		@param pos_infos (Optional) Info about where the trace came from and parameters for it.
+
 		@author Leather128
 	**/
 	public static function haxe_print(value:Dynamic, ?pos_infos:haxe.PosInfos):Void
@@ -212,9 +217,11 @@ class CoolUtil
 
 	/**
 		Prints the specified `message` with `type` and `pos_infos`.
+
 		@param message The message to print as a `String`.
 		@param type (Optional) The type of print (aka, `LOG`, `DEBUG`, `WARNING`, or `ERROR`) as a `PrintType`.
 		@param pos_infos (Optional) Info about where the print came from.
+
 		@author Leather128
 	**/
 	public static function print(message:String, ?type:PrintType = DEBUG, ?pos_infos:haxe.PosInfos):Void
@@ -237,6 +244,7 @@ class CoolUtil
 
 	/**
 		Access to the old `haxe.Log.trace` function.
+
 		@author Leather128
 	**/
 	public static var haxe_trace:Function;

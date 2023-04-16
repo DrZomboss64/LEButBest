@@ -4,7 +4,6 @@ package states;
 import utilities.Discord.DiscordClient;
 #end
 
-import flixel.FlxSprite;
 import utilities.Options;
 import utilities.NoteVariables;
 import substates.OutdatedSubState;
@@ -15,7 +14,7 @@ import utilities.CoolUtil;
 import game.Conductor;
 import ui.Alphabet;
 import flixel.FlxG;
-import flixel.FlxState;
+import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
@@ -47,7 +46,6 @@ class TitleState extends MusicBeatState
 	var wackyImage:FlxSprite;
 
 	static var firstTimeStarting:Bool = false;
-	static var doneFlixelSplash:Bool = false;
 
 	override public function create():Void
 	{
@@ -67,15 +65,6 @@ class TitleState extends MusicBeatState
 			#end
 
 			MusicBeatState.windowNamePrefix = Assets.getText(Paths.txt("windowTitleBase", "preload"));
-
-			#if FLX_NO_DEBUG
-			if (utilities.Options.getData("flixelStartupScreen") && !doneFlixelSplash) {
-				doneFlixelSplash = true;
-				flixel.system.FlxSplash.nextState = states.TitleState;
-				FlxG.switchState(new flixel.system.FlxSplash());
-				return;
-			}
-			#end
 
 			NoteVariables.init();
 

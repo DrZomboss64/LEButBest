@@ -75,8 +75,8 @@ typedef DialogueText =
 class CutsceneUtil
 {
 	public static function loadFromJson(jsonPath:String):Cutscene
-        return parseJSONshit(Assets.getText(Paths.json("cutscenes/" + jsonPath)).trim());
+		return parseJSONshit(Assets.getText(Paths.json("cutscenes/" + jsonPath)).trim());
 
-    public static function parseJSONshit(rawJson:String):Cutscene
+	public static function parseJSONshit(rawJson:String):Cutscene
 		return cast Json.parse(rawJson);
 }

@@ -14,8 +14,6 @@ import flixel.system.FlxSound;
 import debuggers.AnimationDebug;
 import utilities.Controls.Control;
 import flash.text.TextField;
-import flixel.addons.display.FlxBackdrop;
-import flixel.util.FlxGradient;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
@@ -31,6 +29,8 @@ import debuggers.StageMakingState;
 import game.Highscore;
 import openfl.utils.Assets as OpenFLAssets;
 import debuggers.ChartingStateDev;
+import flixel.addons.display.FlxBackdrop;
+import flixel.util.FlxGradient;
 
 class OptionsMenu extends MusicBeatState
 {
@@ -105,34 +105,23 @@ class OptionsMenu extends MusicBeatState
 			new BoolOption("Disable Debug Menus", "disableDebugMenus", 10),
 			new BoolOption("Invisible Notes", "invisibleNotes", 11),
 			new BoolOption("Auto Pause", "autoPause", 12),
-			new BoolOption("Freeplay Corruption", "loadAsynchronously", 13),
-			new BoolOption("Flixel Splash Screen", "flixelStartupScreen", 14),
-			new BoolOption("Skip Results", "skipResultsScreen", 15),
-			new BoolOption("Show Score", "showScore", 16),
+			new BoolOption("Freeplay Corruption", "loadAsynchronously", 13)
 		],
 		[
 			"Optimizations",
 			new PageOption("Back", 0, "Graphics"),
 			new BoolOption("Antialiasing", "antialiasing", 1),
 			new BoolOption("Health Icons", "healthIcons", 2),
-			new BoolOption("Health Bar", "healthBar", 3),
-			new BoolOption("Ratings and Combo", "ratingsAndCombo", 3),
 			new BoolOption("Chars And BGs", "charsAndBGs", 3),
 			new BoolOption("Menu Backgrounds", "menuBGs", 4),
 			new BoolOption("Optimized Characters", "optimizedChars", 5),
 			new BoolOption("Animated Backgrounds", "animatedBGs", 6),
-			new BoolOption("Preload Stage Events", "preloadChangeBGs", 7),
-			new BoolOption("Memory Leaks", "memoryLeaks", 8)
+			new BoolOption("Preload Stage Events", "preloadChangeBGs", 7)
 		],
 		[
 			"Info Display",
 			new PageOption("Back", 0, "Graphics"),
-			new DisplayFontOption("Display Font", [
-				"_sans",
-				OpenFLAssets.getFont(Paths.font("vcr.ttf")).fontName,
-				OpenFLAssets.getFont(Paths.font("pixel.otf")).fontName
-			],
-				6, "infoDisplayFont"),
+			new DisplayFontOption("Display Font", ["_sans", OpenFLAssets.getFont(Paths.font("vcr.ttf")).fontName, OpenFLAssets.getFont(Paths.font("pixel.otf")).fontName], 6, "infoDisplayFont"),
 			new BoolOption("FPS Counter", "fpsCounter", 3),
 			new BoolOption("Memory Counter", "memoryCounter", 4),
 			new BoolOption("Version Display", "versionDisplay", 4)

@@ -122,8 +122,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.playingReplay = false;
 		}
 
-		var daStage = PlayState.curStage; //the gameover voicelines
-
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
 		{
 			FlxG.camera.follow(camFollow, LOCKON, 0.01 * (60 / Main.display.currentFPS));
@@ -131,11 +129,6 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
-			if (daStage == 'wasteland')
-			{
-				FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25), 'shared'));
-			}
-
 			var soundPath = Paths.music("deaths/bf-dead/loop");
 
 			if(Assets.exists(Paths.music("deaths/" + bf.curCharacter + "/loop")))
