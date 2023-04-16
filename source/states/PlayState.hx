@@ -1,5 +1,6 @@
 package states;
 
+import flixel.group.FlxSpriteGroup;
 #if sys
 import sys.FileSystem;
 #end
@@ -8,6 +9,9 @@ import utilities.Discord.DiscordClient;
 #end
 #if polymod
 import polymod.backends.PolymodAssets;
+#end
+#if VIDEOS_ALLOWED
+import hxcodec.VideoHandler;
 #end
 import modding.HScript;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
@@ -570,6 +574,9 @@ class PlayState extends MusicBeatState
 
 	// unused for now ;)
 	public var scripts:Array<HScript> = [];
+	// public var scripts:Array<HScript> = [];
+
+	public var ratingsGroup:FlxSpriteGroup = new FlxSpriteGroup();
 
 	override public function create()
 	{
@@ -1160,47 +1167,6 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 
-		var cutscenePlays = Options.getData("cutscenePlaysOn");
-
-		// what the actual fuck are these conditions i need to change this
-		// TODO: CHANGE THIS SHIT
-		playCutsceneLmao = (!playingReplay
-			&& ((isStoryMode && cutscenePlays == "story") || (!isStoryMode && cutscenePlays == "freeplay") || (cutscenePlays == "both"))
-			&& !playCutscenes);
-		playCutsceneOnPauseLmao = !playingReplay
-			&& ((isStoryMode && cutscenePlays == "story") || (!isStoryMode && cutscenePlays == "freeplay") || (cutscenePlays == "both"));
-
-		if (playCutsceneLmao)
-		{
-			if (SONG.cutscene != null && SONG.cutscene != "")
-			{
-				cutscene = CutsceneUtil.loadFromJson(SONG.cutscene);
-
-				switch (cutscene.type.toLowerCase())
-				{
-					case "video":
-						startVideo(cutscene.videoPath, cutscene.videoExt, false);
-
-					case "dialogue":
-						var box:DialogueBox = new DialogueBox(cutscene);
-						box.scrollFactor.set();
-						// i love this
-						box.finish_Function = function()
-							bruhDialogue;
-						box.cameras = [camHUD];
-
-						startDialogue(box, false);
-
-					default:
-						startCountdown();
-				}
-			}
-			else
-				startCountdown();
-		}
-		else
-			startCountdown();
-
 		// WINDOW TITLE POG
 		MusicBeatState.windowNameSuffix = " - " + SONG.song + " " + (isStoryMode ? "(Story Mode)" : "(Freeplay)");
 
@@ -1300,6 +1266,43 @@ class PlayState extends MusicBeatState
 		}
 
 		events.sort((a, b) -> Std.int(a[1] - b[1]));
+
+		var cutscenePlays = Options.getData("cutscenePlaysOn");
+
+		// what the actual fuck are these conditions i need to change this
+		// TODO: CHANGE THIS SHIT
+		playCutsceneLmao = (!playingReplay
+			&& ((isStoryMode && cutscenePlays == "story") || (!isStoryMode && cutscenePlays == "freeplay") || (cutscenePlays == "both"))
+			&& !playCutscenes);
+		playCutsceneOnPauseLmao = !playingReplay
+			&& ((isStoryMode && cutscenePlays == "story") || (!isStoryMode && cutscenePlays == "freeplay") || (cutscenePlays == "both"));
+
+		if (playCutsceneLmao) {
+			if (SONG.cutscene != null && SONG.cutscene != "") {
+				cutscene = CutsceneUtil.loadFromJson(SONG.cutscene);
+
+				switch (cutscene.type.toLowerCase()) {
+					case "video":
+						startVideo(cutscene.videoPath, cutscene.videoExt, false);
+
+					case "dialogue":
+						var box:DialogueBox = new DialogueBox(cutscene);
+						box.scrollFactor.set();
+						// i love this
+						box.finish_Function = function():Void {
+							bruhDialogue(false);
+						};
+						box.cameras = [camHUD];
+
+						startDialogue(box, false);
+
+					default:
+						startCountdown();
+				}
+			} else
+				startCountdown();
+		} else
+			startCountdown();
 
 		perlinCamera = new Perlin(Math.floor(Math.random() * 65535));
 
@@ -1565,6 +1568,13 @@ class PlayState extends MusicBeatState
 		if (stage.stageScript != null)
 			stage.stageScript.setupTheShitCuzPullRequestsSuck();
 
+		if (generatedSomeDumbEventLuas) {
+			for (key in event_luas.keys()) {
+				var event_lua:ModchartUtilities = event_luas.get(key);
+				event_lua.setupTheShitCuzPullRequestsSuck();
+			}
+		}
+
 		for (i in 0...strumLineNotes.length)
 		{
 			var member = strumLineNotes.members[i];
@@ -1572,6 +1582,27 @@ class PlayState extends MusicBeatState
 			setLuaVar("defaultStrum" + i + "X", member.x);
 			setLuaVar("defaultStrum" + i + "Y", member.y);
 			setLuaVar("defaultStrum" + i + "Angle", member.angle);
+
+			setLuaVar("defaultStrum" + i, {
+				x: member.x,
+				y: member.y,
+				angle: member.angle,
+			});
+
+			if (enemyStrums.members.contains(member)) {
+				setLuaVar("enemyStrum" + i % SONG.keyCount, {
+					x: member.x,
+					y: member.y,
+					angle: member.angle,
+				});
+			} else {
+				setLuaVar("playerStrum" + i % SONG.playerKeyCount, {
+					x: member.x,
+					y: member.y,
+					angle: member.angle,
+				});
+			}
+
 		}
 
 		executeALuaState("start", [SONG.song.toLowerCase()], BOTH, [stage.stage]);
@@ -1736,11 +1767,11 @@ class PlayState extends MusicBeatState
 				if (songNotes[1] >= (!gottaHitNote ? SONG.keyCount : SONG.playerKeyCount))
 					gottaHitNote = !section.mustHitSection;
 
-				if (characterPlayingAs == 1)
-					gottaHitNote = !gottaHitNote;
-
-				if (characterPlayingAs == -1)
-					gottaHitNote = true;
+				switch (characterPlayingAs) {
+					case 1:
+						gottaHitNote = !gottaHitNote;
+					case -1:
+						gottaHitNote = true;
 
 				var daNoteData:Int = Std.int(songNotes[1] % (!gottaHitNote ? SONG.keyCount : SONG.playerKeyCount));
 
@@ -3204,19 +3235,10 @@ class PlayState extends MusicBeatState
 			accuracyText.borderSize = 1;
 			accuracyText.font = Paths.font("vcr.ttf");
 
-			add(accuracyText);
+			ratingsGroup.add(accuracyText);
 		}
 
-		rating.cameras = [camHUD];
-
-		var comboSpr:FlxSprite = new FlxSprite() /*.loadGraphic(Paths.image("ui skins/" + SONG.ui_Skin + "/ratings/combo", 'shared'))*/;
-		comboSpr.screenCenter();
-		comboSpr.acceleration.y = 600;
-		comboSpr.velocity.y -= 150;
-
-		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		comboSpr.cameras = [camHUD];
-		add(rating);
+		ratingsGroup.add(rating);
 
 		rating.setGraphicSize(Std.int(rating.width * Std.parseFloat(ui_settings[0]) * Std.parseFloat(ui_settings[4])));
 		comboSpr.setGraphicSize(Std.int(comboSpr.width * Std.parseFloat(ui_settings[0]) * Std.parseFloat(ui_settings[4])));
@@ -3224,7 +3246,6 @@ class PlayState extends MusicBeatState
 		rating.antialiasing = ui_settings[3] == "true";
 		comboSpr.antialiasing = ui_settings[3] == "true";
 
-		comboSpr.updateHitbox();
 		rating.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];

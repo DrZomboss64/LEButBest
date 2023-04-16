@@ -75,7 +75,7 @@ class OptionsMenu extends MusicBeatState
 			new GameSubstateOption("Max FPS", 4, substates.MaxFPSMenu),
 			new BoolOption("Bigger Score Text", "biggerScoreInfo", 5),
 			new BoolOption("Bigger Info Text", "biggerInfoText", 6),
-			new StringSaveOption("Time Bar Style", ["leather engine", "psych engine", "new kade engine", "old kade engine"], 7, "timeBarStyle"),
+			new StringSaveOption("Time Bar Style", ["leather engine", "psych engine", "old kade engine"], 7, "timeBarStyle"),
 			new PageOption("Screen Effects", 8, "Screen Effects")
 		],
 		[

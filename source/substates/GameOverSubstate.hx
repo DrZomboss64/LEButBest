@@ -80,8 +80,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		
 		super.update(elapsed);
 
-		FlxG.camera.followLerp = 0.01 * (60 / Main.display.currentFPS);
-
 		if (controls.ACCEPT)
 		{
 			endBullshit();
@@ -141,6 +139,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
+
+		FlxG.camera.followLerp = elapsed * 0.6;
 	}
 
 	var isEnding:Bool = false;

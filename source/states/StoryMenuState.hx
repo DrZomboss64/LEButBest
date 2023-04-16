@@ -1,10 +1,10 @@
 package states;
 
-import substates.ResetScoreSubstate;
 #if discord_rpc
 import utilities.Discord.DiscordClient;
 #end
 
+import substates.ResetScoreSubstate;
 import lime.app.Application;
 import utilities.CoolUtil;
 import lime.utils.Assets;
@@ -28,6 +28,7 @@ class StoryMenuState extends MusicBeatState
 {
 	/* WEEK GROUPS */
 	static var groupIndex:Int = 0;
+
 	var groups:Array<StoryGroup> = [];
 
 	var currentGroup:StoryGroup;
@@ -36,8 +37,8 @@ class StoryMenuState extends MusicBeatState
 	static var curWeek:Int = 0;
 	static var curDifficulty:Int = 1;
 
-	var curDifficulties:Array<Array<String>> = [["easy","default/easy"],["normal","default/normal"],["hard","default/hard"]];
-	var defaultDifficulties:Array<Array<String>> = [["easy","default/easy"],["normal","default/normal"],["hard","default/hard"]];
+	var curDifficulties:Array<Array<String>> = [["easy", "default/easy"], ["normal", "default/normal"], ["hard", "default/hard"]];
+	var defaultDifficulties:Array<Array<String>> = [["easy", "default/easy"], ["normal", "default/normal"], ["hard", "default/hard"]];
 
 	/* TEXTS */
 	var weekScoreText:FlxText;
@@ -61,6 +62,9 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
+			TitleState.playTitleMusic();
+		
 		#if not web
         Paths.clearUnusedMemory();
         Paths.clearStoredMemory();
@@ -120,7 +124,8 @@ class StoryMenuState extends MusicBeatState
 
 				if(controls.RESET)
 				{
-					openSubState(new ResetScoreSubstate("nonelolthisisweekslmao", curDifficulties[curDifficulty][0], curWeek, currentGroup.pathName + "Week", true));
+					openSubState(new ResetScoreSubstate("nonelolthisisweekslmao", curDifficulties[curDifficulty][0], curWeek, currentGroup.pathName + "Week",
+						true));
 					changeWeek();
 				}
 			}
@@ -229,7 +234,8 @@ class StoryMenuState extends MusicBeatState
 		groupSwitchText.borderSize = 1;
 		add(groupSwitchText);
 
-		var groupInfoText = new FlxText(leftArrow.x, difficultySprite.y + difficultySprite.height + 96, 0, "Q + E to change groups\nRESET to reset week score\n", 24);
+		var groupInfoText = new FlxText(leftArrow.x, difficultySprite.y + difficultySprite.height + 96, 0,
+			"Q + E to change groups\nRESET to reset week score\n", 24);
 		groupInfoText.alignment = LEFT;
 		groupInfoText.font = weekSongListText.font;
 		groupInfoText.color = FlxColor.WHITE;
@@ -308,7 +314,8 @@ class StoryMenuState extends MusicBeatState
 	
 			var dif = curDifficulties[curDifficulty][0].toLowerCase();
 	
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + (dif == "normal" ? "" : "-" + dif), PlayState.storyPlaylist[0].toLowerCase());
+			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + (dif == "normal" ? "" : "-" + dif),
+				PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;
 			PlayState.storyDifficultyStr = dif.toUpperCase();
 			PlayState.campaignScore = 0;
